@@ -1,0 +1,19 @@
+.mat-toolbar {
+    font-family: "Ring";
+}
+
+a{
+    text-decoration: none;
+    color: #ffd700;
+}
+
+div {
+    display: flex;
+    flex: auto;
+}
+
+
+
+
+
+

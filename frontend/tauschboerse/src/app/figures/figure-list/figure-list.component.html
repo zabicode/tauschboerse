@@ -1,0 +1,53 @@
+<!--<p>figure-list works!</p>-->
+
+
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<body *ngIf="!isLoading">
+  <div class="figure-card" *ngFor="let figure of figures">
+  <mat-card class="example-card">
+    <mat-card-header>
+      <div mat-card-avatar 
+      class="example-header-image" 
+      *ngIf="figure.franchise === ''"
+      [ngStyle]="{'background-image': 'url(' + figure.imagePath + ')'}">
+      </div>
+      <div mat-card-avatar 
+      class="example-header-image" 
+      *ngIf="figure.franchise === 'lotr'"
+      [ngStyle]="{'background-image': 'url(/assets/images/figures/lotr-logo2.jpg)'}">
+      </div>
+      <div mat-card-avatar 
+      class="example-header-image" 
+      *ngIf="figure.franchise === 'divers'"
+      [ngStyle]="{'background-image': 'url(/assets/images/figures/cat.jpg)'}">
+      </div> 
+      <div mat-card-avatar 
+      class="example-header-image" 
+      *ngIf="figure.franchise === 'star wars' "
+      [ngStyle]="{'background-image': 'url(/assets/images/figures/sw-logo.png)'}">
+      </div> 
+      <mat-card-title> {{ figure.name }}</mat-card-title>
+      <mat-card-subtitle> {{ figure.franchise }} </mat-card-subtitle>
+    </mat-card-header>
+    <div class="figure-main-image">
+      <img mat-card-image  [src]="figure.imagePath" [alt]="figure.name">
+    </div>
+    <mat-card-content>
+      <p>
+        {{ figure.description }}
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button>LIKE</button>
+      <button mat-button>SHARE</button>
+      <button *ngIf="!admin" mat-button color=""><a routerLink="/figure-details/{{figure.id}}"
+          style="text-decoration: none;">DETAILS</a></button>
+      <button *ngIf="admin" mat-button color="primary"><a routerLink="/figure-details/{{figure.id}}"
+        style="text-decoration: none;">EDIT</a></button>
+      <button mat-button color="warn" (click)="onDelete(figure.id)">DELETE</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+</body>
+<mat-paginator [length]="totalFigures" [pageSize]="figuresPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)" *ngIf="figures.length >=0"></mat-paginator>

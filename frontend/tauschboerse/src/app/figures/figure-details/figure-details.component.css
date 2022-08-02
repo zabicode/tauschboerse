@@ -1,0 +1,11 @@
+.edit-form {
+   display: flex;
+   flex-direction:column;
+   width: 50%;
+  }
+
+
+  button{
+    margin: 2px;
+    width: 50%;
+  }

@@ -1,0 +1,38 @@
+body {
+  display: flex;
+  align-self: auto;
+}
+
+.example-card {
+  max-width: 300px;
+  margin: 1em;
+  display: flex;
+  flex-direction: column;
+}
+
+.example-header-image {
+  background-size: cover;
+}
+
+.figure-main-image{
+  display: flex;
+  width: 200px;
+  height: 200px;
+}
+img{
+  width: 100%;
+  height: auto;
+}
+
+mat-paginator{
+  margin-top: 1rem;
+}
+
+mat-spinner{
+  margin: auto;
+}
+
+mat-card-actions{
+  display: flex;
+  flex-direction: column;
+}
