@@ -1,11 +1,64 @@
-.edit-form {
+form {
    display: flex;
-   flex-direction:column;
-   width: 50%;
+   flex-direction:row;
+   margin: 1rem;
   }
 
+  .form-fields{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-images{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 2rem;
+  }
+
+  mat-form-field{
+    margin-top: 1rem;
+  }
 
   button{
-    margin: 2px;
-    width: 50%;
+    margin: 1rem;
+    width: 20%;
   }
+
+  .buttons{
+    display: flex;
+    justify-content: center;
+    margin-top: 5rem;
+  }
+
+  #backButton{
+    font-family: "Ring";
+    margin-top: 12rem;
+    margin-left: 3rem;
+    width: auto;
+  }
+  
+  .image-preview{
+    height: 12rem;
+    margin: 1rem 0;
+  }
+  
+  .image-preview img {
+    height: 100%;
+  }
+
+  .current-image{
+    height: 12rem;
+    margin: 1rem 0;
+  }
+  
+  .current-image img {
+    height: 100%;
+  }
+  
+  mat-spinner{
+    margin: auto;
+  }
+  

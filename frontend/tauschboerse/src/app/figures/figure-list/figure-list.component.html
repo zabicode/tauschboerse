@@ -32,22 +32,32 @@
     <div class="figure-main-image">
       <img mat-card-image  [src]="figure.imagePath" [alt]="figure.name">
     </div>
+    
+
     <mat-card-content>
-      <p>
-        {{ figure.description }}
-      </p>
+     
     </mat-card-content>
+  
     <mat-card-actions>
-      <button mat-button>LIKE</button>
-      <button mat-button>SHARE</button>
-      <button *ngIf="!admin" mat-button color=""><a routerLink="/figure-details/{{figure.id}}"
-          style="text-decoration: none;">DETAILS</a></button>
-      <button *ngIf="admin" mat-button color="primary"><a routerLink="/figure-details/{{figure.id}}"
-        style="text-decoration: none;">EDIT</a></button>
-      <button mat-button color="warn" (click)="onDelete(figure.id)">DELETE</button>
+      <button *ngIf="!userIsAuthenticated || userId != figure.userId" mat-button color=""><a routerLink="/figure-details/{{figure.id}}"
+        style="text-decoration: none;">DETAILS</a></button>
+        <button *ngIf="userIsAuthenticated && userId === figure.userId" mat-button color=""><a routerLink="/figure-details/{{figure.id}}"
+          style="text-decoration: none;">EDIT</a></button>
+        
+        <button *ngIf="userIsAuthenticated && userId === figure.userId" mat-stroked-button color="warn" (click)="onDelete(figure.id)">DELETE</button>
+
     </mat-card-actions>
+    <!--
+    <div class="auth-buttons">
+      <button *ngIf="userIsAuthenticated && userId === figure.userId" mat-stroked-button color="primary"><a routerLink="/figure-details/{{figure.id}}"
+        style="text-decoration: none;">EDIT</a></button>
+    </div>
+    -->
+  
   </mat-card>
 </div>
 
 </body>
+
+
 <mat-paginator [length]="totalFigures" [pageSize]="figuresPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)" *ngIf="figures.length >=0"></mat-paginator>

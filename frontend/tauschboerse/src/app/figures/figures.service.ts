@@ -14,15 +14,7 @@ export class FiguresService {
     private figureCount;
 
 
-    private adminMode = true;
-
     constructor(private httpClient: HttpClient){}
-
-
-
-    getMode(){
-        return this.adminMode; 
-    }
 
     getFigureCount(){
         return this.figureCount;
@@ -32,6 +24,7 @@ export class FiguresService {
         const queryParams = `?&pagesize=${figurePerPage}&page=${currentPage}&search=${searchParam}`;
         this.httpClient.get<{message: string, figures: Figure[], count: number}>("http://localhost:3000/api/figures" + queryParams)
         .subscribe(figureData => {
+            //console.log(figureData);
             this.figures = figureData.figures;
             this.figuresUpdated.next([...this.figures]);
             this.figureCount = figureData.count;
@@ -83,7 +76,8 @@ export class FiguresService {
                 name: name,
                 description: description,
                 franchise: franchise,
-                imagePath: responseData.figure.imagePath
+                imagePath: responseData.figure.imagePath,
+                userId: responseData.figure.userId
                 
             };
             //console.log(responseData.message);
@@ -104,6 +98,9 @@ export class FiguresService {
     }
     */
 
+
+    //ORIGINAL UPDATE FUNCTION
+    /*
     updateFigure(id: number, name:string, description: string, franchise: string, imagePath:string){
 
         const figure: Figure = {id: id, name: name, description: description, franchise: franchise, imagePath:imagePath};
@@ -123,9 +120,38 @@ export class FiguresService {
         });
     }
 
+    */
+
+    updateFigure(id: string, name:string, description: string, franchise: string, image: File){
+
+        const figureData = new FormData();
+        figureData.append("id", id);
+        figureData.append("name", name);
+        figureData.append("description", description);
+        figureData.append("franchise", franchise);
+        figureData.append("image", image, name);
+
+        this.httpClient.put<{message: string, figure: Figure}>("http://localhost:3000/api/figures/"+ id, figureData)
+        .subscribe(responseData => {
+            console.log(responseData.message);
+            const figure: Figure = {
+                id: +id,
+                name: name,
+                description: description,
+                franchise: franchise,
+                imagePath: responseData.figure.imagePath,
+                userId: null
+            };
+            this.figures.push(figure);
+            this.figuresUpdated.next([...this.figures]);
+        });
+    }
+
+
     deleteFigure(id:number){
-        this.httpClient.delete("http://localhost:3000/api/figures/"+ id)
-        .subscribe(() => {
+        this.httpClient.delete<{message: string}>("http://localhost:3000/api/figures/"+ id)
+        .subscribe(responseData => {
+            console.log(responseData.message)
             const updatedFigures = this.figures.filter(figure => figure.id != id);
             this.figures = updatedFigures;
             this.figuresUpdated.next([...this.figures]);

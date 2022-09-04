@@ -18,6 +18,7 @@ body {
   display: flex;
   width: 200px;
   height: 200px;
+  justify-content: center;
 }
 img{
   width: 100%;
@@ -25,7 +26,7 @@ img{
 }
 
 mat-paginator{
-  margin-top: 1rem;
+  margin-top: 15rem;
 }
 
 mat-spinner{
@@ -34,5 +35,17 @@ mat-spinner{
 
 mat-card-actions{
   display: flex;
+  justify-content: center;
   flex-direction: column;
+}
+
+.auth-buttons{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+p{
+  font-size: small;
+  color: grey;
 }

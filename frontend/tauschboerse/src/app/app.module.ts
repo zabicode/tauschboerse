@@ -13,13 +13,18 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { HeaderComponent } from './header/header.component';
 import {MatCardModule} from '@angular/material/card';
 import { FiguresService } from './figures/figures.service';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FigureDetailsComponent } from './figures/figure-details/figure-details.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { SearchComponent } from './header/search/search.component';
+import { LoginComponent } from './auth/login/login.component';
+import { SignupComponent } from './auth/signup/signup.component';
+import { RouterModule } from '@angular/router';
+import {MatMenuModule} from '@angular/material/menu';
+import { AuthInterceptor } from './auth/auth-interceptor';
 
 
 
@@ -31,7 +36,9 @@ import { SearchComponent } from './header/search/search.component';
     FigureCreateComponent,
     HeaderComponent,
     FigureDetailsComponent,
-    SearchComponent
+    SearchComponent,
+    LoginComponent,
+    SignupComponent
 
   ],
   imports: [
@@ -48,9 +55,11 @@ import { SearchComponent } from './header/search/search.component';
     HttpClientModule,
     NgbModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    RouterModule,
+    MatMenuModule
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

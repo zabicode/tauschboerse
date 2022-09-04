@@ -1,40 +1,23 @@
 const path = require('path');
-const { urlencoded, json } = require('express');
 const express = require('express');
 const multer = require('multer');
 const Figure = require('./models/figure');
-const app = express();
+bodyParser = require('body-parser');
 
+const checkAuth = require('./middleware/check-auth')
+
+//USER ROUTE
+const userRoutes = require("./routes/users");
+
+const app = express();
 const db = require('./util/database');
+
 
 // needed for search operators
 const Sequelize = require('sequelize');
+const User = require('./models/user');
 const Op = Sequelize.Op;
-
-bodyParser = require('body-parser');
-
-
-
-
-/*  DATABASE TEST
-db.execute('SELECT * FROM figures')
-.then(result => {
-    console.log(result)
-})
-.catch(err => {
-    console.log(err);
-});
-
-*/
-
-/*
-Figure.fetchAll().then(
-    result => {console.log(result)
-    }).catch(err => {
-        console.log(err)
-    });
-*/
-
+//
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -46,13 +29,15 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
         "Access-Control-Allow-Headers",
-        "Origin, X-Requested-Width, Content-Type, Accept"
+        "Origin, X-Requested-Width, Content-Type, Accept, Authorization"
     );
     res.setHeader(
         "Access-Control-Allow-Methods",
         "GET, POST, PATCH, PUT , DELETE, OPTIONS");
     next();
 });
+
+
 
 const MIME_TYPE_MAP = {
     "image/png": "png",
@@ -80,17 +65,21 @@ const storage = multer.diskStorage({
 });
 
 
-app.post("/api/figures", multer({ storage: storage }).single("image"), (req, res, next) => {
+
+app.post("/api/figures", checkAuth, multer({ storage: storage }).single("image"), (req, res, next) => {
 
     const url = req.protocol + '://' + req.get("host");
+
+    console.log(req.userData.userId);
 
     Figure.create({
         name: req.body.name,
         description: req.body.description,
         franchise: req.body.franchise,
-        imagePath: url + "/images/" + req.file.filename
+        imagePath: url + "/images/" + req.file.filename,
+        userId: req.userData.userId
     })
-        .then(createdFigure => {
+    .then(createdFigure => {
             res.status(201).json({
                 message: 'Figure created successfully',
                 figure: {
@@ -102,6 +91,9 @@ app.post("/api/figures", multer({ storage: storage }).single("image"), (req, res
         });
 });
 
+
+// ORIGINAL UPDATE FUNCTION
+/*
 app.put("/api/figures/:id", (req, res, next) => {
 
 
@@ -120,8 +112,41 @@ app.put("/api/figures/:id", (req, res, next) => {
         message: 'Figure updated successfully'
     });
 });
+*/
 
+app.put("/api/figures/:id", checkAuth, multer({ storage: storage }).single("image"), (req, res, next) => {
 
+    const url = req.protocol + '://' + req.get("host");
+
+    Figure.update({
+        name: req.body.name,
+        description: req.body.description,
+        franchise: req.body.franchise,
+        imagePath: url + "/images/" + req.file.filename,
+        userId: req.userData.userId
+    },
+        {
+            where: {
+                id: req.body.id, 
+                userId: req.userData.userId }
+        })
+        .then(updatedFigure => {
+            if(updatedFigure == true){
+                res.status(201).json({
+                    message: 'Figure updated successfully',
+                    figure: {
+                        ...updatedFigure,  // JS nextGen Feature
+                        id: updatedFigure.id
+                    }
+                }
+                );
+            } else {
+                res.status(401).json({message: 'Not authorized!'});
+            }
+            
+        });
+
+});
 
 app.get('/api/figures/:id', (req, res, next) => {
 
@@ -145,6 +170,9 @@ app.get('/api/figures/:id', (req, res, next) => {
 });
 
 
+
+// SECOND APPROACH
+//
 /*
 app.get('/api/figures/:figureId',(req, res, next) => {
 
@@ -163,6 +191,8 @@ app.get('/api/figures/:figureId',(req, res, next) => {
     });
 });
 */
+
+
 
 app.get('/api/figures', (req, res, next) => {
 
@@ -219,25 +249,41 @@ app.get('/api/figures', (req, res, next) => {
 
 });
 
-app.delete('/api/figures/:id', (req, res, next) => {
+app.delete('/api/figures/:id', checkAuth, (req, res, next) => {
 
     const figureId = req.params.id;
-    Figure.destroy({ where: { id: figureId } })
+    Figure.destroy({ where: { id: figureId, userId: req.userData.userId } })
         .then(result => {
-            console.log(result);
-            res.status(200).json({
-                message: 'Post deleted'
-            });
-        });
-
+            //console.log(result);
+            if(result == true ){
+                res.status(200).json({ message: 'Deletion successfully'});
+            } else {
+                res.status(401).json({ message: 'Not authorized!'});
+            }
+        })
 });
 
 
 
-db.sync().then(result => {
+
+
+// USING USERS ROUTE
+app.use('/api/user', userRoutes)
+////////////////////
+
+// RELATION MANY TO ONE
+Figure.belongsTo(User, {constraints: true, onDelete: 'CASCADE'});
+User.hasMany(Figure);
+
+db
+.sync()
+.then(result => {
     //console.log(result);
-}).catch(err => {
+})
+.catch(err => {
     console.log(err);
 });
+
+
 
 module.exports = app;

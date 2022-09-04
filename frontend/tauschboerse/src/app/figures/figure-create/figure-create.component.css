@@ -1,9 +1,22 @@
-.creation-form{
+mat-form-field{
   display: flex;
   flex-direction: column;
   align-items:center;
-  margin-top: 3rem;
 }
+
+.creationForm{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+  
+  mat-card{
+    margin-top: 3rem;
+  }
+
+  .mat-stroked-button{
+    margin-top: 1rem;
+  }
 
 .imagePicker{
   display: flex;

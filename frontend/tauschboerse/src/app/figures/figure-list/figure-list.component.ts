@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 
 import { Figure } from '../figure.model';
 import { FiguresService } from '../figures.service';
@@ -14,17 +15,20 @@ export class FigureListComponent implements OnInit, OnDestroy {
 
   figures: Figure[] = [];
   private figuresSub: Subscription;
+  private authStatusSub: Subscription;
 
   isLoading = false;
 
   totalFigures = 10;
-  figuresPerPage = 1;
+  figuresPerPage = 5;
   currentPage = 0;
   pageSizeOptions = [1,2,5,10];
 
-  admin: boolean;
+  //admin: boolean;
+  userIsAuthenticated = false;
+  userId: string;
 
-  constructor(public figuresService: FiguresService) { }   // "public" keyword allows to directly declare a property
+  constructor(public figuresService: FiguresService, private authService: AuthService) { }   // "public" keyword allows to directly declare a property
 
   ngOnInit() {
     this.isLoading = true;
@@ -34,9 +38,20 @@ export class FigureListComponent implements OnInit, OnDestroy {
       this.isLoading = false;
     });
 
-    this.admin = this.figuresService.getMode();
+    //this.admin = this.figuresService.getMode();
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.userId = this.authService.getUserId();
+
+    this.authStatusSub = this.authService.getAuthStatusListener().subscribe(
+      isAuthenticated => {
+        this.userIsAuthenticated = isAuthenticated;
+        this.userId = this.authService.getUserId();
+
+      }
+    );
 
     this.totalFigures = this.figuresService.getFigureCount();
+    //console.log(this.userId);
 
   }
 
@@ -59,6 +74,7 @@ export class FigureListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.figuresSub.unsubscribe();
+    this.authStatusSub.unsubscribe();
   }
 
 }

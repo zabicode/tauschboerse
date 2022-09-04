@@ -2,6 +2,14 @@
     font-family: "Ring";
 }
 
+button{
+    font-family: "Ring";
+    font-size: large;
+    
+}
+
+
+
 a{
     text-decoration: none;
     color: #ffd700;
@@ -11,6 +19,7 @@ div {
     display: flex;
     flex: auto;
 }
+
 
 
 

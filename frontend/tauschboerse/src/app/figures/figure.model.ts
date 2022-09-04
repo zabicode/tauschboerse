@@ -4,4 +4,5 @@ export interface Figure {
     description: string;
     franchise: string;
     imagePath: string;
+    userId: string;
 }

@@ -1,0 +1,28 @@
+mat-form-field{
+  display:flex;
+  flex-direction: column;
+  min-width: 15rem;
+}
+
+mat-card{
+  margin-top: 3rem;
+}
+
+button{
+  margin-top: 1rem;
+}
+
+
+.loginForm{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+mat-spinner{
+  margin: auto;
+}
+
+.sign-up {
+  margin: 1rem;
+}

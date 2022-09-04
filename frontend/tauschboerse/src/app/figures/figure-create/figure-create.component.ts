@@ -56,12 +56,14 @@ export class FigureCreateComponent implements OnInit {
     */
 
     this.isLoading = true;
+
     this.figuresService.addFigures(
       this.form.value.name,
       this.form.value.description,
       this.form.value.franchise,
       this.form.value.image);
     this.form.reset();
+    this.isLoading = false;
   }
 
 }

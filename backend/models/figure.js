@@ -15,6 +15,7 @@ const Figure = sequelize.define('figures', {
     },
     franchise: Sequelize.STRING,
     imagePath: Sequelize.STRING
+   
 
 });
 

@@ -2,16 +2,40 @@
     <div class="title">
         <a [routerLink]="['']"><span>Meine Tauschboerse</span></a>
     </div>
-    <div class="create">
+    <div class="create" *ngIf="userIsAuthenticated">
         <a [routerLink]="['/create']"><span>Create</span></a>  
     </div>
-    <div class="login">
-        <span>Login</span>
-    </div>
-    <div class="logout">
-        <span>Logout</span>  
-    </div>
+    
     <div>
         <app-search></app-search>
+    </div>
+
+    <div class="login" *ngIf="!userIsAuthenticated">
+        <a [routerLink]="['/login']"><span>Login</span></a>  
+    </div>
+
+    <div class="logout" *ngIf="userIsAuthenticated">
+        <button (click)="onLogout()">Logout</button>  
+    </div>
+
+    <!--
+    <div class="signup">
+        <a [routerLink]="['/signup']"><span>Sign up</span></a>  
+    </div>
+    -->
+
+    <div class="settings">
+        <button mat-button [matMenuTriggerFor]="menu">Settings</button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>Profile</button>
+            <button mat-menu-item>My Figures</button>
+            <button mat-menu-item>Account</button>
+            <button mat-menu-item>Options</button>
+
+        </mat-menu>
+    </div>
+
+    <div *ngIf="userIsAuthenticated">
+        <span>UserId: {{userId}} </span>
     </div>
 </mat-toolbar>
